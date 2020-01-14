@@ -164,7 +164,7 @@ window.addEventListener("DOMContentLoaded", function() {
                 
             }
 
-            if (d = MobileCodesArr[d].length-1) {
+            if (d === MobileCodesArr[d].length-1) {
 
                 MobileNumber.value = "";
  NotMobileNumber.value = document.getElementById('busPhoneID').value;
