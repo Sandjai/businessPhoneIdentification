@@ -20,33 +20,34 @@ window.addEventListener("DOMContentLoaded", function() {
     
     
     function setCursorPosition(pos, elem) {
-    elem.focus();
-    if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);
-    else if (elem.createTextRange) {
-    var range = elem.createTextRange();
-    range.collapse(true);
-    range.moveEnd("character", pos);
-    range.moveStart("character", pos);
-    range.select()
-    }
+        elem.focus();
+        if (elem.setSelectionRange) elem.setSelectionRange(pos, pos);
+        else if (elem.createTextRange) {
+            var range = elem.createTextRange();
+            range.collapse(true);
+            range.moveEnd("character", pos);
+            range.moveStart("character", pos);
+            range.select()
+        }
     }
     
     
     
     function mask(event) {
     
-    matrix = GlobalMatrix;
-    var i = 0;
-    
-    var def = matrix.replace(/\D/g, ""),
-    val = this.value.replace(/\D/g, "");
-    if (def.length >= val.length) val = def;
-    this.value = matrix.replace(/./g, function(a) {
-    return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
-    });
-    if (event.type == "blur") {
-    if (this.value.length == 2) this.value = ""
-    } else setCursorPosition(this.value.length, this)
+        matrix = GlobalMatrix;
+        var i = 0;
+        
+        var def = matrix.replace(/\D/g, ""),
+        val = this.value.replace(/\D/g, "");
+        if (def.length >= val.length) val = def;
+        this.value = matrix.replace(/./g, function(a) {
+            return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val.length ? "" : a
+        });
+        if (event.type == "blur") {
+            if (this.value.length == 2) this.value = ""
+        } 
+        else setCursorPosition(this.value.length, this)
     }
     
     
@@ -56,13 +57,12 @@ window.addEventListener("DOMContentLoaded", function() {
     input.addEventListener("blur", mask, false);
     
     
-    document.getElementById('countryID').addEventListener("change", function()
+    document.getElementById('countryID').addEventListener("change", function() 
+    { if (document.getElementById('busPhoneID-error') != null) {
+        document.getElementById('busPhoneID-error').innerHTML = "";
+    };
     
-                                                                                                             {
-                                                                                                                 if (document.getElementById('busPhoneID-error') != null) {
-     document.getElementById('busPhoneID-error').innerHTML = "";
-                                                                                                                };
-                                                                                                            document.getElementById('busPhoneID').value = '';
+    document.getElementById('busPhoneID').value = '';
     _countryCode = _countryField.options[_countryField.selectedIndex].getAttribute('data-country-code');
     _symbolNumber = _countryField.options[_countryField.selectedIndex].getAttribute('data-symbol-number');
     
@@ -73,9 +73,6 @@ window.addEventListener("DOMContentLoaded", function() {
     
     
     function PlaceholderMatrix () {
-    
-    
-    
     
     
     if (_countryCode===null) {
@@ -106,25 +103,14 @@ window.addEventListener("DOMContentLoaded", function() {
     
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+       
     function _Error () {
     
     
         var _Length = +_countryCode.length + 1 + +_symbolNumber;
     _telephoneNumber.setAttribute("minlength", _Length);
     _telephoneNumber.setAttribute("maxlength", _Length);
-    var _Message = "ÐÐµÐ´Ð¾ÑÑ‚Ð°Ñ‚Ð¾Ñ‡Ð½Ð¾Ðµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐ¸Ð¼Ð²Ð¾Ð»Ð¾Ð².";
+    var _Message = "Недостаточное количество символов";
     _telephoneNumber.setAttribute("data-msg-minlength", _Message);
     if (document.getElementById('busPhoneID-error') != null) {
     document.getElementById('busPhoneID-error').innerHTML = _Message;
@@ -142,54 +128,55 @@ window.addEventListener("DOMContentLoaded", function() {
     document.getElementById('busPhoneID').addEventListener("blur", function() {
     
      if (_countryCode != '') {
-    
-    
-    var _MobileCodes = _countryField.options[_countryField.selectedIndex].getAttribute('data-mob');
-    var MobileCodesArr = _MobileCodes.split(', ');
-    var _LengthBeforeNumber = +_countryField.options[_countryField.selectedIndex].getAttribute('data-country-code').length + 1;
+
     
     
     
     _Error();
     
-    
-    
-    
-    
-    var MaxLengthOfMobileCode = 0;
-    for (var d = 0; d<MobileCodesArr.length; d++) {
-    if (MobileCodesArr[d].length > MaxLengthOfMobileCode) {
-        MaxLengthOfMobileCode = MobileCodesArr[d].length;
-    }
-    }
-    
-    
-    
-    var SymbolsInInput = ""
-    for (var a = 0; a < MaxLengthOfMobileCode; a++) {
-    SymbolsInInput += document.getElementById('busPhoneID').value.charAt(_LengthBeforeNumber + a);
-    }
-    
-    for (var b = 0; b<MobileCodesArr.length; b++) {
-        if (MobileCodesArr[b] == SymbolsInInput) {
-                   MobileNumber.value = document.getElementById('busPhoneID').value;
-    NotMobileNumber.value = '';
-    break;
-        }
-        else {
-               MobileNumber.value = "";
-    NotMobileNumber.value = document.getElementById('busPhoneID').value;
-        }
-    }
-    
-    
-    
-    
-    
+    mobNotMob();
     
     
     }})
     
+    function mobNotMob() {
+
+            
     
+    var _MobileCodes = _countryField.options[_countryField.selectedIndex].getAttribute('data-mob');
+    var MobileCodesArr = _MobileCodes.split(', ');
+    var _LengthBeforeNumber = +_countryField.options[_countryField.selectedIndex].getAttribute('data-country-code').length + 1;
+  
+        
+        for (var d = 0; d<MobileCodesArr.length; d++) {
+
+            var SymbolsInInput = "";
+            for (var i = 0; i < MobileCodesArr[d].length; i++) {
+
+                SymbolsInInput += document.getElementById('busPhoneID').value.charAt(_LengthBeforeNumber + i);
+            }
+
+            
+            if (SymbolsInInput === MobileCodesArr[d]) {
+                MobileNumber.value = document.getElementById('busPhoneID').value;
+                NotMobileNumber.value = '';
+                return;
+                
+            }
+
+            if (d = MobileCodesArr[d].length-1) {
+
+                MobileNumber.value = "";
+ NotMobileNumber.value = document.getElementById('busPhoneID').value;
+
+            }
+
+ 
+        }
+    
+  
+    }
+
+
     
     });
